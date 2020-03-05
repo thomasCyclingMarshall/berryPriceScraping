@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class Product {
     private String title;
     private BigDecimal unitPrice;
