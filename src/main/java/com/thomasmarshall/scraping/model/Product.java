@@ -1,9 +1,6 @@
 package com.thomasmarshall.scraping.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -11,9 +8,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Product {
     private String title;
-    private BigDecimal unit_price;
+    private BigDecimal unitPrice;
     private int kcal_per_100g;
     private String description;
 }

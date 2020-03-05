@@ -1,49 +1,32 @@
 package com.thomasmarshall.scraping;
 
-import java.io.BufferedReader;
+import com.thomasmarshall.scraping.model.Product;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.util.ArrayList;
 
 public class Scraper {
     public static void main(String[] arg) {
-        HttpURLConnection con = null;
-        BufferedReader in = null;
         try {
-            URL url = new URL("https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html");
-            con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
+            Document doc = Jsoup.connect("https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html").get();
+            Elements products = doc.select("ul.productLister").select("div.product");
 
-            int status = con.getResponseCode();
+            ArrayList<Product> prods = new ArrayList<>();
+            products.forEach(s -> {
+                Product prod = new Product();
+                prod.setTitle(s.select("div.productInfo").eachText().get(0));
+                prod.setUnitPrice(Util.getUnitPrice(s.select("div.pricing").eachText().get(0)));
+                System.out.println(prod);
+                prods.add(prod);
+            });
 
-            if (status == 200) {
-                in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuffer content = new StringBuffer();
-                while ((inputLine = in.readLine()) != null) {
-                    content.append(inputLine);
-                }
-                System.out.println(content.toString());
-            }
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (con != null) con.disconnect();
         }
+
     }
+
 }
