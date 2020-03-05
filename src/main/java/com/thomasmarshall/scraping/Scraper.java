@@ -19,8 +19,16 @@ public class Scraper {
                 Product prod = new Product();
                 prod.setTitle(s.select("div.productInfo").eachText().get(0));
                 prod.setUnitPrice(Util.getUnitPrice(s.select("div.pricing").eachText().get(0)));
-                prod.setDescription(getFirstLineOfDescription(getProductPageURL(s.select("div.productInfo"))));
-//                System.out.println(prod);
+
+                Document productDoc;
+                try {
+                    productDoc = Jsoup.connect(getProductPageURL(s.select("div.productInfo"))).get();
+                    prod.setDescription(getFirstLineOfDescription(productDoc));
+                    prod.setKcal_per_100g(Util.getKcalFromPageSource(productDoc.text()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(prod);
                 prods.add(prod);
             });
 
@@ -34,20 +42,15 @@ public class Scraper {
         return (select.select("a[href]").attr("abs:href"));
     }
 
-    public static String getFirstLineOfDescription(String pageURL) {
-        try {
-            Document doc = Jsoup.connect(pageURL).get();
-            Elements descriptors = doc.select("div.productText");
-            if (descriptors.get(0).select("div.memo").eachText().size() > 0) {
-                return descriptors.get(0).select("div.memo").eachText().get(0);
-            } else {
-                return descriptors.eachText().get(0);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static String getFirstLineOfDescription(Document productPage) {
+
+        Elements descriptors = productPage.select("div.productText");
+        if (descriptors.get(0).select("div.memo").eachText().size() > 0) {
+            return descriptors.get(0).select("div.memo").eachText().get(0);
+        } else {
+            return descriptors.eachText().get(0);
         }
-        return "";
+
 
     }
-
 }

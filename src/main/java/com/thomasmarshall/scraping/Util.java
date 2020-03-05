@@ -15,4 +15,13 @@ public class Util {
 
         return BigDecimal.ZERO;
     }
+
+    public static int getKcalFromPageSource(String pageSource) {
+        Pattern pattern = Pattern.compile("(\\d)+(?=kcal)");
+        Matcher matcher = pattern.matcher(pageSource);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(0));
+        }
+        return 0;
+    }
 }
