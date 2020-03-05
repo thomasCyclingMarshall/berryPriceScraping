@@ -19,13 +19,34 @@ public class Scraper {
                 Product prod = new Product();
                 prod.setTitle(s.select("div.productInfo").eachText().get(0));
                 prod.setUnitPrice(Util.getUnitPrice(s.select("div.pricing").eachText().get(0)));
-                System.out.println(prod);
+                prod.setDescription(getFirstLineOfDescription(getProductPageURL(s.select("div.productInfo"))));
+//                System.out.println(prod);
                 prods.add(prod);
             });
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public static String getProductPageURL(Elements select) {
+        return (select.select("a[href]").attr("abs:href"));
+    }
+
+    public static String getFirstLineOfDescription(String pageURL) {
+        try {
+            Document doc = Jsoup.connect(pageURL).get();
+            Elements descriptors = doc.select("div.productText");
+            if (descriptors.get(0).select("div.memo").eachText().size() > 0) {
+                return descriptors.get(0).select("div.memo").eachText().get(0);
+            } else {
+                return descriptors.eachText().get(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
 
     }
 
