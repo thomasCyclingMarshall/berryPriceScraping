@@ -16,12 +16,12 @@ public class Util {
         return BigDecimal.ZERO;
     }
 
-    public static int getKcalFromPageSource(String pageSource) {
+    public static Integer getKcalFromPageSource(String pageSource) {
         Pattern pattern = Pattern.compile("(\\d)+(?=kcal)");
         Matcher matcher = pattern.matcher(pageSource);
         if (matcher.find()) {
             return Integer.parseInt(matcher.group(0));
         }
-        return 0;
+        return null; //GSON won't serialize null, which is the desired functionality.
     }
 }

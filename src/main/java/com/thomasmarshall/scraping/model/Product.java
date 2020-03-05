@@ -12,6 +12,6 @@ import java.math.BigDecimal;
 public class Product {
     private String title;
     private BigDecimal unitPrice;
-    private int kcal_per_100g;
+    private Integer kcal_per_100g;
     private String description;
 }
