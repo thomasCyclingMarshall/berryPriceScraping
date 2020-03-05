@@ -1,6 +1,5 @@
 package com.thomasmarshall.scraping.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,10 +17,10 @@ public class ShoppingList {
 
     public void calculateTotal() {
         total = new Total();
-        total.setGross(calculateGrossTotal().setScale(2, RoundingMode.HALF_UP));
+        total.setGrossAndVAT(calculateGrossTotal());
     }
 
     private BigDecimal calculateGrossTotal() {
-        return products.stream().map(p -> p.getUnitPrice()).reduce((BigDecimal::add)).orElse(BigDecimal.ZERO);
+        return (products.stream().map(p -> p.getUnitPrice()).reduce((BigDecimal::add)).orElse(BigDecimal.ZERO)).setScale(2, RoundingMode.HALF_UP);
     }
 }

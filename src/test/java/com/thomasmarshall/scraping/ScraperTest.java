@@ -43,7 +43,7 @@ public class ScraperTest {
     public void testVATisCalculatedCorrectly() {
         BigDecimal gross = new BigDecimal(12).setScale(2, RoundingMode.HALF_UP);
         Total total = new Total();
-        total.setGross(gross);
+        total.setGrossAndVAT(gross);
         assertEquals(new BigDecimal(2.00).setScale(2, RoundingMode.HALF_UP), total.getVat());
     }
 }

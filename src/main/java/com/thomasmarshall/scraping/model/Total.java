@@ -16,7 +16,7 @@ public class Total {
     @Getter
     private BigDecimal vat;
 
-    public void setGross(BigDecimal gross) {
+    public void setGrossAndVAT(BigDecimal gross) {
         this.gross = gross;
         this.vat = gross.divide(new BigDecimal(6), 2, RoundingMode.HALF_UP);
     }
